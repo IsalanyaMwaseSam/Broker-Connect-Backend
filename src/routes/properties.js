@@ -116,6 +116,10 @@ router.get('/', async (req, res) => {
     res.json(formattedProperties);
   } catch (error) {
     console.error('Properties fetch error:', error);
+    // Return empty array if tables don't exist yet
+    if (error.code === '42P01') {
+      return res.json([]);
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });
