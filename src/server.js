@@ -37,7 +37,13 @@ app.use('/api/notifications', require('./routes/notifications').router);
 app.use('/api/reviews', require('./routes/reviews'));
 
 app.get('/api/health', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
   res.json({ status: 'OK', message: 'BrokerConnect API is running' });
+});
+
+app.get('/api/test', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.json({ message: 'CORS test endpoint working' });
 });
 
 app.listen(PORT, () => {
