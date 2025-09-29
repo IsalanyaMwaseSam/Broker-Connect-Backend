@@ -14,11 +14,13 @@
     "init-notifications": "node src/init-notifications.js",
     "update-booking-status": "node src/update-booking-status.js",
     "init-reviews": "node src/init-reviews.js",
-    "setup": "npm run init-db && npm run init-messages && npm run init-bookings && npm run init-notifications && npm run init-reviews"
+    "setup": "npm run init-db && npm run init-messages && npm run init-bookings && npm run init-notifications && npm run init-reviews",
+    "setup-pg": "node src/init-pg-db.js"
   },
   "dependencies": {
     "express": "^4.18.0",
     "mysql2": "^3.6.0",
+    "pg": "^8.11.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.0",
     "cors": "^2.8.5",
