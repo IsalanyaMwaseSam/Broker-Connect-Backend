@@ -70,6 +70,34 @@ exports.handler = async (event, context) => {
       )
     `);
 
+    // Create messages table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        sender_id VARCHAR(36) REFERENCES users(id),
+        receiver_id VARCHAR(36) REFERENCES users(id),
+        property_id INT REFERENCES properties(id),
+        message TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create bookings table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bookings (
+        id SERIAL PRIMARY KEY,
+        property_id INT REFERENCES properties(id),
+        client_id VARCHAR(36) REFERENCES users(id),
+        broker_id VARCHAR(36) REFERENCES users(id),
+        booking_date TIMESTAMP NOT NULL,
+        status VARCHAR(20) CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')) DEFAULT 'pending',
+        notes TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     console.log('Database tables created successfully!');
     
     // Insert default admin user
@@ -108,7 +136,7 @@ exports.handler = async (event, context) => {
       },
       body: JSON.stringify({
         message: 'Database initialized successfully!',
-        tables: ['users', 'brokers', 'properties'],
+        tables: ['users', 'brokers', 'properties', 'messages', 'bookings'],
         defaultUsers: ['admin@test.com', 'client@test.com']
       })
     };
