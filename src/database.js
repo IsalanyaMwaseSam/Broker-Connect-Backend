@@ -4,7 +4,7 @@ require('dotenv').config();
 
 let pool;
 
-if (process.env.NODE_ENV === 'production' && process.env.NETLIFY_DATABASE_URL) {
+if (process.env.NETLIFY_DATABASE_URL) {
   // PostgreSQL for production (Neon)
   pool = new Pool({
     connectionString: process.env.NETLIFY_DATABASE_URL,
