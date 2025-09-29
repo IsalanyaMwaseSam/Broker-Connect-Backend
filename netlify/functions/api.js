@@ -48,7 +48,27 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/test', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.json({ message: 'CORS test endpoint working' });
+  res.json({ 
+    message: 'CORS test endpoint working',
+    env: {
+      NODE_ENV: process.env.NODE_ENV,
+      hasDatabase: !!process.env.NETLIFY_DATABASE_URL,
+      hasJWT: !!process.env.JWT_SECRET
+    }
+  });
+});
+
+app.post('/api/test-login', async (req, res) => {
+  try {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.json({ 
+      message: 'Test login endpoint working',
+      body: req.body,
+      env: process.env.NODE_ENV
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Global error handler
