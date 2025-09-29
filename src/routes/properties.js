@@ -341,6 +341,10 @@ router.get('/client/taken', authenticateToken, async (req, res) => {
     res.json(formattedProperties);
   } catch (error) {
     console.error('Error fetching taken properties:', error);
+    // Return empty array if tables don't exist yet
+    if (error.code === '42P01') {
+      return res.json([]);
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });

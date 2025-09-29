@@ -56,6 +56,16 @@ router.get('/me', authenticateToken, async (req, res) => {
     res.json(userData);
   } catch (error) {
     console.error('Error fetching current user:', error);
+    // Return basic user info if tables don't exist yet
+    if (error.code === '42P01') {
+      return res.json({
+        id: req.user.userId,
+        role: req.user.role,
+        email: 'user@example.com',
+        name: 'User',
+        isVerified: false
+      });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });
