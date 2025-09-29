@@ -25,6 +25,12 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+// Error logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, req.body);
+  next();
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
@@ -43,6 +49,15 @@ app.get('/api/health', (req, res) => {
 app.get('/api/test', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.json({ message: 'CORS test endpoint working' });
+});
+
+// Global error handler
+app.use((error, req, res, next) => {
+  console.error('Error:', error);
+  res.status(500).json({ 
+    message: 'Server error',
+    error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+  });
 });
 
 module.exports.handler = serverless(app);

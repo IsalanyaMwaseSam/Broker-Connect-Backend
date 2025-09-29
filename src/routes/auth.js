@@ -9,7 +9,12 @@ const router = express.Router();
 // Login
 router.post('/login', async (req, res) => {
   try {
+    console.log('Login attempt for:', req.body.email);
     const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password required' });
+    }
 
     const [users] = await pool.execute(
       'SELECT u.*, b.license_number, b.nin, b.verification_status, b.rating, b.total_reviews, b.commission FROM users u LEFT JOIN brokers b ON u.id = b.user_id WHERE u.email = ?',
